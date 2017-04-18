@@ -27,19 +27,12 @@ public class ClientRequestAPI {
 
 	public static void main(String[] args) {
 		try {
+			// these are either retrieved 
 			String apiKey = "654832567742-6udg14sfuif69g84c78ss3s3msdlf33l.apps.googleusercontent.com";
 			String apiSecret = "SDFwrgfsdSeQnFtSDFSDFzHd";
 			String accessToken = "SDFABHheGgfaewFAWEFewfAEWfefaFEaeFsFAdsfdsfWfEWAenavsdsfdsvs";
 			String refreshToken = "DSfSdfaweFawcfEWfaewFAfAfEWFsfawfESfaesfesGegawFEaeFAEfasx";
-			HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-			JsonFactory jsonFactory = new JacksonFactory();
-			final Credential credential = convertToGoogleCredential(accessToken, refreshToken, apiSecret, apiKey);
-			Builder builder = new Gmail.Builder(httpTransport, jsonFactory, credential);
-			builder.setApplicationName("OAuth API Sample");
-			Gmail gmail = builder.build();
-			MimeMessage content = createEmail("inactive@tburne.net", "fromsomeone@tburne.net", "Test Email", "It works");
-			Message message = createMessageWithEmail(content);
-			gmail.users().messages().send("fromsomeone@tburne.net", message).execute();
+			performRequest(accessToken, refreshToken, apiKey, apiSecret);
 		} catch (GeneralSecurityException e) {
 			throw new RuntimeException(e);
 		} catch (IOException e) {
@@ -49,6 +42,18 @@ public class ClientRequestAPI {
 		}
 	}
 	
+	private static void performRequest(String accessToken, String refreshToken, String apiKey, String apiSecret) throws GeneralSecurityException, IOException, MessagingException {
+		HttpTransport httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+		JsonFactory jsonFactory = new JacksonFactory();
+		final Credential credential = convertToGoogleCredential(accessToken, refreshToken, apiSecret, apiKey);
+		Builder builder = new Gmail.Builder(httpTransport, jsonFactory, credential);
+		builder.setApplicationName("OAuth API Sample");
+		Gmail gmail = builder.build();
+		MimeMessage content = createEmail("inactive@tburne.net", "fromsomeone@tburne.net", "Test Email", "It works");
+		Message message = createMessageWithEmail(content);
+		gmail.users().messages().send("fromsomeone@tburne.net", message).execute();
+	}
+
 	private static Credential convertToGoogleCredential(String accessToken, String refreshToken, String apiSecret, String apiKey) {
 		HttpTransport httpTransport = new NetHttpTransport();
 		JsonFactory jsonFactory = new JacksonFactory();
