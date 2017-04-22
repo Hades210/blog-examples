@@ -1,0 +1,6 @@
+p { color:blue; }
+.redtext { color:red; }
+#sometext { color:green; }
+table { border: 1px solid black; }
+td .name { color: orange; }
+p .name { color: red; }
